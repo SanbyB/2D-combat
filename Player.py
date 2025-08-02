@@ -2,7 +2,7 @@ import pygame
 from Entity import Entity
 
 class Player(Entity):
-    def __init__(self, x, y, camera, radius=20, color=(0, 200, 255), speed=3):
+    def __init__(self, x, y, camera=None, radius=15, color=(0, 200, 255), speed=3):
         super().__init__(x, y, radius, color, speed)
         self.camera = camera
 

@@ -4,7 +4,8 @@ from EventHandler import EventHandler
 from Player import Player
 from Camera import Camera
 from Walls import Walls
-from Enemies import Enemy  # Import Enemy class
+from Enemies import Enemy
+from MapLoader import MapLoader
 
 # Initialize Pygame
 pygame.init()
@@ -16,25 +17,25 @@ pygame.display.set_caption("Pygame Window")
 
 event_handler = EventHandler()
 camera = Camera(WIDTH, HEIGHT)
-player = Player(WIDTH // 2, HEIGHT // 2, camera)
+# player = Player(WIDTH // 2, HEIGHT // 2, camera)
 
 
-# Create a box of walls 3x the size of the screen around the player
-walls = Walls()
-box_width = WIDTH * 3
-box_height = HEIGHT * 3
-box_x = player.x - box_width // 2
-box_y = player.y - box_height // 2
-wall_thickness = 40
+# # Create a box of walls 3x the size of the screen around the player
+# walls = Walls()
+# box_width = WIDTH * 3
+# box_height = HEIGHT * 3
+# box_x = player.x - box_width // 2
+# box_y = player.y - box_height // 2
+# wall_thickness = 40
 
-# Top wall
-walls.add_wall(box_x, box_y, box_width, wall_thickness)
-# Bottom wall
-walls.add_wall(box_x, box_y + box_height - wall_thickness, box_width, wall_thickness)
-# Left wall
-walls.add_wall(box_x, box_y, wall_thickness, box_height)
-# Right wall
-walls.add_wall(box_x + box_width - wall_thickness, box_y, wall_thickness, box_height)
+# # Top wall
+# walls.add_wall(box_x, box_y, box_width, wall_thickness)
+# # Bottom wall
+# walls.add_wall(box_x, box_y + box_height - wall_thickness, box_width, wall_thickness)
+# # Left wall
+# walls.add_wall(box_x, box_y, wall_thickness, box_height)
+# # Right wall
+# walls.add_wall(box_x + box_width - wall_thickness, box_y, wall_thickness, box_height)
 
 def draw_checkerboard(surface, camera, width, height, tile_size=40, color1=(50, 50, 50), color2=(80, 80, 80)):
     # Draw enough tiles to cover the visible area, offset by camera
@@ -53,10 +54,15 @@ def draw_checkerboard(surface, camera, width, height, tile_size=40, color1=(50, 
             pygame.draw.rect(surface, color, (rect_x, rect_y, tile_size, tile_size))
 
 # --- Add a couple of enemy entities ---
-enemies = [
-    Enemy(player.x + 200, player.y, speed=2),
-    Enemy(player.x - 250, player.y + 100, speed=2)
-]
+# enemies = [
+#     Enemy(player.x + 200, player.y, speed=2),
+#     Enemy(player.x - 250, player.y + 100, speed=2)
+# ]
+
+# Load map and entities
+map_loader = MapLoader()
+walls, enemies, player = map_loader.load("Graphics/map.png")  # Replace with your map
+player.camera = camera  # Set the player's camera
 
 
 # Main loop
