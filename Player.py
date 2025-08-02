@@ -2,10 +2,11 @@ import pygame
 from Entity import Entity
 
 class Player(Entity):
-    def __init__(self, x, y, radius=20, color=(0, 200, 255), speed=3):
+    def __init__(self, x, y, camera, radius=20, color=(0, 200, 255), speed=3):
         super().__init__(x, y, radius, color, speed)
+        self.camera = camera
 
-    def update(self, keys, walls=None):
+    def update(self, keys, mouse_buttons, mouse_pos, walls=None, enemies=None):
         dx, dy = 0, 0
         if keys['w']:
             dy -= 1
@@ -18,8 +19,45 @@ class Player(Entity):
 
         # Normalize movement to prevent faster diagonal movement
         if dx != 0 or dy != 0:
-            self.move(dx * self.speed, dy * self.speed, walls)
+            self.move(dx * self.speed, dy * self.speed, walls, enemies)
 
-    def draw_at(self, surface, pos):
-        pygame.draw.circle(surface, self.color, (int(pos[0]), int(pos[1])), self.radius)
+        if mouse_buttons[1]:
+            self.attack(mouse_pos, enemies)
+        self.update_attack_cooldown()
 
+        # Handle flash timer for damage feedback
+        if self.flash_timer > 0:
+            self.flash_timer -= 1
+            if self.flash_timer == 0:
+                self.color = self.base_color
+
+    def take_damage(self, amount):
+        self.health -= amount
+        self.color = (255, 255, 255)  # Flash white
+        self.flash_timer = 5  # Number of frames to stay white
+
+    def attack(self, mouse_pos, enemies):
+        if not super().attack():
+            return False
+
+        for enemy in enemies:
+            if enemy is self:
+                continue
+
+            # Calculate distance to enemy
+            dx = enemy.x - self.x
+            dy = enemy.y - self.y
+            distance = (dx ** 2 + dy ** 2) ** 0.5
+
+            if distance <= self.attack_distance:
+                x, y = self.camera.apply((enemy.rect.x, enemy.rect.y))
+                entRect = pygame.Rect(
+                    x,
+                    y,
+                    enemy.rect.width,
+                    enemy.rect.height
+                )
+                if entRect.collidepoint(mouse_pos):
+                    enemy.take_damage(self.attack_strength)
+                    if enemy.health <= 0:
+                        enemies.remove(enemy)
