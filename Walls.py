@@ -14,7 +14,7 @@ class Walls:
     def __init__(self):
         self.walls = []
 
-    def add_wall(self, x, y, width, height, color=(120, 120, 120)):
+    def add_wall(self, x, y, width, height, color=(0,0,0)):
         self.walls.append(Wall(x, y, width, height, color))
 
     def draw(self, surface, camera):

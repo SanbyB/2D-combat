@@ -27,7 +27,7 @@ clock = pygame.time.Clock()
 running = True
 while running:
     # draw_checkerboard(screen, camera, WIDTH, HEIGHT)  # Draw checkerboard background
-    pygame.draw.rect(screen, (0, 0, 0), (0, 0, WIDTH, HEIGHT))  # Clear screen with black
+    pygame.draw.rect(screen, (39, 39, 68), (0, 0, WIDTH, HEIGHT))  # Clear screen with black
     walls.draw(screen, camera)  # Draw walls
     running = event_handler.process_events()
 

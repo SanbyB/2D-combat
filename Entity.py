@@ -15,6 +15,8 @@ class Entity:
         self.health = max_health  # Health attribute
         self.max_health = max_health
 
+        self.animation = None  # Animation object, if any
+
         self.base_color = color
         self.flash_timer = 0
 
@@ -70,18 +72,23 @@ class Entity:
         if self.attack_cooldown > 0:
             self.attack_cooldown -= 1
 
-    def draw_at(self, surface, pos):
-        # when changing this with a sprite make sure to move the position to the center of the entity
-        pygame.draw.circle(surface, self.color, (int(pos[0]), int(pos[1])), self.radius)
+    def draw_at(self, surface, pos, health_bar=True):
+        # Draw animation frame if self.animation exists, else draw circle
+        if self.animation:
+            self.animation.update()
+            self.animation.draw(surface, pos)
+        else:
+            pygame.draw.circle(surface, self.color, (int(pos[0]), int(pos[1])), self.radius)
 
         # Draw health bar above the entity
-        bar_width = self.radius * 2
-        bar_height = 6
-        health_ratio = max(self.health, 0) / self.max_health
-        bar_x = int(pos[0] - self.radius)
-        bar_y = int(pos[1] - self.radius - bar_height - 4)
+        if health_bar:
+            bar_width = self.radius * 2
+            bar_height = 6
+            health_ratio = max(self.health, 0) / self.max_health
+            bar_x = int(pos[0] - self.radius)
+            bar_y = int(pos[1] - self.radius - bar_height - 4)
 
-        # Background (red)
-        pygame.draw.rect(surface, (120, 0, 0), (bar_x, bar_y, bar_width, bar_height))
-        # Foreground (green)
-        pygame.draw.rect(surface, (0, 200, 0), (bar_x, bar_y, bar_width * health_ratio, bar_height))
+            # Background (red)
+            pygame.draw.rect(surface, (0, 0, 0), (bar_x, bar_y, bar_width, bar_height))
+            # Foreground (green)
+            pygame.draw.rect(surface, (198,159,165), (bar_x, bar_y, bar_width * health_ratio, bar_height))

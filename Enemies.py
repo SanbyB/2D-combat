@@ -1,4 +1,6 @@
+import random
 import pygame
+from Animation import Animation
 from Entity import Entity
 
 class Enemy(Entity):
@@ -6,6 +8,13 @@ class Enemy(Entity):
         super().__init__(x, y, radius, color, speed)
         self.chase_radius = chase_radius
         self.attack_distance = 100  # Distance at which the enemy can attack
+
+        size = 64
+        scale = 1.2
+
+        self.animation = Animation("Graphics/idleEnemy.png", size, size, 2, speed=random.randint(20, 30), scale=scale)  # Load enemy animation
+        self.radius = size * scale / 2  # Adjust radius based on sprite size and scale
+
 
     def update(self, player, walls=None, entities=None):
         # Calculate distance to player
