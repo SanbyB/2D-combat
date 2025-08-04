@@ -15,7 +15,10 @@ class Entity:
         self.health = max_health  # Health attribute
         self.max_health = max_health
 
+        self.facingRight = True
+
         self.animation = None  # Animation object, if any
+        self.base_animation = None  # Base animation for idle state
 
         self.base_color = color
         self.flash_timer = 0
@@ -76,7 +79,7 @@ class Entity:
         # Draw animation frame if self.animation exists, else draw circle
         if self.animation:
             self.animation.update()
-            self.animation.draw(surface, pos)
+            self.animation.draw(surface, pos, self.facingRight)
         else:
             pygame.draw.circle(surface, self.color, (int(pos[0]), int(pos[1])), self.radius)
 

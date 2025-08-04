@@ -32,7 +32,7 @@ class Animation:
             self.current_frame = (self.current_frame + 1) % self.num_frames
             self.frame_counter = 0
 
-    def draw(self, surface, pos):
+    def draw(self, surface, pos, facingRight=True):
         """
         surface: pygame.Surface to draw on
         pos: (x, y) tuple for the top-left position to draw the frame
@@ -43,4 +43,6 @@ class Animation:
         if self.scale != 1.0:
             new_size = (int(self.frame_width * self.scale), int(self.frame_height * self.scale))
             frame = pygame.transform.scale(frame, new_size)
+        if not facingRight:
+            frame = pygame.transform.flip(frame, True, False)
         surface.blit(frame, frame_pos)

@@ -12,7 +12,9 @@ class Enemy(Entity):
         size = 64
         scale = 1.2
 
-        self.animation = Animation("Graphics/idleEnemy.png", size, size, 2, speed=random.randint(20, 30), scale=scale)  # Load enemy animation
+        self.base_animation = Animation("Graphics/idleEnemy.png", size, size, 2, speed=random.randint(20, 30), scale=scale)  # Load enemy animation
+        self.animation = self.base_animation  # Set base animation for idle state
+        
         self.radius = size * scale / 2  # Adjust radius based on sprite size and scale
 
 
@@ -37,9 +39,11 @@ class Enemy(Entity):
             self.flash_timer -= 1
             if self.flash_timer == 0:
                 self.color = self.base_color
+                self.animation = self.base_animation
 
     def take_damage(self, amount):
         self.health -= amount
+        self.animation = Animation("Graphics/damageEnemy.png", 64, 64, 1, speed=random.randint(20, 30), scale=1.2)
         self.color = (255, 255, 255)  # Flash white
         self.flash_timer = 5  # Number of frames to stay white
 
